@@ -1,0 +1,165 @@
+{% extends 'shop/base.html' %}
+
+{% block main_area %}
+<!--<header class="bg-dark py-5">-->
+<!--  <div class="container px-4 px-lg-5 my-5">-->
+<!--    <div class="text-center text-white">-->
+<!--      <h1 class="display-4 fw-bolder">Shop in style</h1>-->
+<!--      <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</header>-->
+
+
+
+<section class="py-5">
+
+  <div class="container px-4 px-lg-5 mt-3 ml-5 mr-1">
+    <div class="row">
+      {% include 'shop/sidebar.html' %}
+
+      <div class="col-9">
+        <!--                       -->
+<section class="container">
+
+    <div class="row">
+        <div class=" col-xs-5 col-sm-5 col-md-6 col-lg-7"></div>
+        <div class="mb-3 col-xs-7 col-sm-7 col-md-6 col-lg-5 w-30 float-right">
+            <div class="input-group">
+                <input class="form-control py-2 rounded-pill mr-1 pr-5" type="search" id="search-input">
+                <span class="input-group-append">
+                    <button class="btn rounded-pill border-0 ml-n5" type="button" onclick="searchBook()">
+                        <i class="fa fa-search" ></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</section>
+  <script>
+            function searchBook(){
+                searchValue = document.getElementById('search-input').value.trim();
+                if( searchValue.length > 1 ){
+                    location.href = "/shop/search/" + searchValue + "/";
+                }
+                else{
+                    alert('검색어(' + searchValue +') 길이가 너무 짧아요.');
+                }
+            };
+
+            document.getElementById('search-input').addEventListener('keyup',function(event){
+                    if(event.key === 'Enter'){
+                        searchBook();
+                    }
+                });
+
+        </script>
+
+
+        {% if search_info %}
+
+          <h6>
+              ' <b>{{ search_info }}</b> '의 검색 결과입니다. ( {{search_count}} 개의 검색 결과 )</h6>
+          {% elif keyword %}
+          <h6>' <b>{{ keyword }}</b> ' 와 연관된 도서입니다.</h6>
+          {% elif this_page_country %}
+             <p class="mb-1">
+          <b><small>{{ this_page_country }} > {{ this_page_Genre }}</small></b>
+        </p>
+          {% else %}
+          <small><b>도서 전체</b></small>
+          {% endif %}
+<!--        {% if this_page_country %}-->
+<!--        <p class="mb-1">-->
+<!--          <b><small>{{ this_page_country }} > {{ this_page_Genre }}</small></b>-->
+<!--        </p>-->
+<!--        {% endif %}-->
+
+        <hr class="mt-0">
+
+
+
+
+        {% for b in book_list %}
+        <div>
+          <div class="row">
+
+            <div class="col-3">
+              {% if b.head_image %}
+              <img class="card-img-top" src="{{ b.head_image.url }}" alt="..." />
+              {% else %}
+              <img class="card-img-top" src="https://dummyimage.com/450x450/dee2e6/6c757d.jpg" alt="..." />
+
+              {% endif %}
+              <br>
+              <div>
+                <p class="text-muted small text-center">미리보기</p>
+              </div>
+
+            </div>
+
+            <div class="col-9">
+              <h4 role="button" class="fw-bolder">
+                <a href="{{ b.get_absolute_url }}" class="text-black">[{{ b.country.name }}] {{ b.title }}</a></h4>
+              <p class="text-muted small mb-1"><a href="{{ b.publisher.get_absolute_url }}">{{ b.publisher }}</a> ·
+                  {{ b.author }} · <a class="text-muted" href="/shop/category/{{ b.country }}/{{ b.genre.slug }}/">{{ b.country }}_{{ b.genre }}</a></p>
+              <!-- Product price-->
+              {% if b.on_sale %}
+              <span class="text-primary">{{ b.sale }}% </span><span
+                class="text-muted text-decoration-line-through">{{ b.price }}원</span>
+              - {{ b.get_sale_price }}원
+              {% else %}
+              {{ b.get_sale_price }}원
+              {% endif %}
+
+              <div>
+                {{ b.introduction | truncatechars:70 }}
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+        {% endfor %}
+        <!--                        -->
+      </div>
+
+
+
+    </div>
+
+
+  </div>
+
+  {% if is_paginated %}
+  <nav aria-label="Pagination">
+    <ul class="pagination justify-content-center my-4">
+
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="true">
+          Newer</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+          Newer</a>
+      </li>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Older</a></li>
+      {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#!">Older</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  {% endif %}
+
+</section>
+
+
+
+
+{% endblock %}

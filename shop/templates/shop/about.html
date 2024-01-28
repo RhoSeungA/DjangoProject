@@ -1,0 +1,155 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block main_area %}
+
+ <script>
+        google.charts.load('current', {'packages': ['line']}); //bar, line
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart(){
+            var data = google.visualization.arrayToDataTable([
+                ['카테고리', '국내도서', '서양도서', '일본도서'],
+                ['소설', {{ kor_books_a_count }}, {{ w_books_a_count }}, {{ japan_books_a_count }}],
+                ['공학', {{ kor_books_b_count }}, {{ w_books_b_count }}, {{ japan_books_b_count }}],
+                ['시/에세이', {{ kor_books_c_count }}, {{ w_books_c_count }}, {{ japan_books_c_count }}]
+            ]);
+            var options = {
+                chart: {
+
+
+                }
+            };
+            var chart = new google.charts.Line(document.getElementById('mychart1'));
+            chart.draw(data, google.charts.Line.convertOptions(options));
+        };
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart2);
+
+        function drawChart2(){
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Sales'],
+                ['2014', 1000],
+                ['2015', 1170],
+                ['2016', 600],
+                ['2017', 1030]
+            ]);
+            var options = {
+                chart: {
+                    title: 'company Performance',
+                    subtitle: 'Sales : 2014 ~ 2017'
+                }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('mychart2'));
+            chart.draw(data, options);
+        };
+
+    </script>
+
+<section class="py-5 container w-75">
+<h4><b>덕성 문고</b></h4>
+<div class="card mb-3">
+  <img src="{% static 'shop/image/about1.jpg' %}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Company 회사 소개</h5>
+    <p class="card-text">
+      1999년 4월 1일 국내 최초의 인터넷 서점으로 출발하여 시장을 선도해온 덕성문고는 서업 초기 부터 대한민국
+        대표 인터넷 서점으로의 위치를 유지하고 있는 1위 인터넷 서점입니다.
+        덕성 문고는 최고의 도서 정보는 물론 국내 최대 규모의 물류 센터를 통한 최대의 보유 도서량 과학화된 빠른 배송과 고객 만족을 실현시키기 위해 최선을 아할 것입니다.
+    </p>
+    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+  </div>
+</div>
+
+
+<br>
+  <table class="table  table-sm w-75">
+<h5><b>회사 개요</b></h5>
+  <tbody >
+    <tr>
+      <th scope="row">회사명</th>
+      <td>덕성 주식회사</td>
+    </tr>
+  <tr>
+      <th scope="row">대표</th>
+      <td>홍길동</td>
+    </tr>
+  <tr>
+      <th scope="row">설립일</th>
+      <td>1999.4.1</td>
+    </tr>
+  <tr>
+      <th scope="row">임직원수</th>
+      <td>491명(2022년 12월 기준)</td>
+  </tr>
+   <tr>
+      <th scope="row">본사 주소</th>
+      <td>서울시 영등포구 으행로 11,5~6층(여의도동, 일산 빌딩)</td>
+  </tr>
+
+  </tbody>
+</table>
+
+
+
+<!--  -->
+  <br>
+
+<h5 class="mb-3"><b>상품 통계</b></h5>
+<div clss="card" data-toggle="modal" data-target="#portfolio3">
+                        <div class="card-img-top" id="mychart1"></div>
+
+</div>
+
+
+<!--모달-->
+
+ <!-- Modal -->
+    <div class="modal fade" id="portfolio3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel3">상품 통계</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <table class="table table-boundary table-striped">
+                                <tr>
+                                    <th></th><th>소설</th><th>공학</th><th>시/에세이</th>
+                                </tr>
+                                <tr>
+                                    <th>국내도서</th><th>{{ kor_books_a_count }}</th><th>{{ kor_books_b_count }}</th><th>{{ kor_books_c_count }}</th>
+                                </tr>
+                                <tr>
+                                    <th>일본도서</th><th>{{ japan_books_a_count }}</th><th>{{ japan_books_b_count }}</th><th>{{ japan_books_c_count }}</th>
+                                </tr>
+                                <tr>
+                                    <th>서양도서</th><th>{{ w_books_a_count }}</th><th>{{ w_books_b_count }}</th><th>{{ w_books_c_count }}</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--  모달 끝-->
+
+<!--  -->
+
+</section>
+
+
+<p>{{ kor_books_a_count }}</p>
+
+
+{% endblock %}

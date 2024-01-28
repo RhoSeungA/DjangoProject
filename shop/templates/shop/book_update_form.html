@@ -1,0 +1,32 @@
+{% extends 'shop/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+    상품 수정
+{% endblock %}
+
+{% block main_area %}
+<section class="container w-75">
+    <h1><b>도서 정보 수정</b></h1>
+    <hr>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            {{ form | crispy }}
+            <div>
+                <label for="id_tags">keywords:</label>
+                <input type="text" id="id_tags" name="keywords_str" value="{{ keywords_str_default }}"
+                class="textinput textInput form-control">
+            </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary float_left">Submit</button>
+    </form>
+{{ form.media }}
+
+<hr>
+
+<hr>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="col-3">
+  <div id="mobile-filter">
+
+    <div class="border-bottom pb-2 ml-2">
+      <h4 id="burgundy">Filters</h4>
+    </div>
+
+    <div class="py-2 border-bottom ml-3">
+      <a class="pl-sm-0 pl-2 text-black" href="/shop/"><b>도서 전체보기</b></a>
+      <br>
+    </div>
+
+
+    {% for c in Countrys %}
+    <div class="py-2 border-bottom ml-3">
+      <h6 class="font-weight-bold">{{ c }}</h6>
+<!--      <div><span class="fa fa-minus"></span></div>-->
+      {% for g in Genres %}
+      <div>
+        <a class="text-muted" href="/shop/category/{{ c.slug }}/{{ g.slug }}/">{{ g }}</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor%}
+
+
+
+  </div>
+</div>

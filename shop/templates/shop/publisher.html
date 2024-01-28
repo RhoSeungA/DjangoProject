@@ -1,0 +1,51 @@
+{% extends 'shop/base.html' %}
+
+{% block main_area %}
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row">
+            <div class="col-3 border-right">
+                <h3><b>{{ publisher.name }}</b></h3>
+            </div>
+
+            <div class="col-9">
+                <h6><b>소개</b></h6>
+                <p class="text-muted">{{ publisher.information }}</p>
+                <h6><b>주소</b></h6>
+                <p class="text-muted">{{ publisher.address }}</p>
+                <h6><b>전화번호</b></h6>
+                <p class="text-muted">{{ publisher.tell }}</p>
+                <h6><b>{{ publisher.name }} 도서</b></h6>
+<!--                -->
+                <div class="row">
+                        {% for b in books %}
+                                    <div class="col-2 ml-3">
+                                        {% if b.head_image %}
+                                      <img src="{{ b.head_image.url }}" class="card-img-top mt-2" alt="...">
+                                      {% else %}
+                                       <img src="https://dummyimage.com/450x450/dee2e6/6c757d.jpg" class="card-img-top mt-2" alt="...">
+                                        {% endif %}
+                                        <div class="p-0">
+                                        <h6 class="card-title mt-3 mb-0"><a href="{{ b.get_absolute_url }}" class="text-dark"> {{ b.title }}</a></h6>
+                                        <small>{{ b.get_sale_price }}원</small>
+                                        {% if b.on_sale %}
+                                        <span class="text-primary small">{{ b.sale }}% </span>
+                                        {% endif %}
+
+                                      </div>
+
+                                    </div>
+       {% endfor %}
+
+                        </div>
+<!--                -->
+            </div>
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

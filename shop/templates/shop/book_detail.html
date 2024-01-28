@@ -1,0 +1,392 @@
+{% extends 'shop/base.html' %}
+{% load crispy_forms_tags %}
+{% block main_area %}
+<section class="py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="row gx-4 gx-lg-5 align-items-center">
+      <div class="col-md-6">
+        {% if book.head_image %}
+        <img class="card-img-top mb-5 mb-md-0" src="{{ book.head_image.url }}" alt="..." />
+        {% else %}
+        <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/400x500/dee2e6/6c757d.jpg" alt="..." />
+        {% endif %}
+      </div>
+      <div class="col-md-6">
+        <div class="small mb-1"><a class="text-muted" href="/shop/category/{{ book.country }}/{{ book.genre.slug }}/">{{ book.country }} > {{ book.genre }}</a></div>
+        <p class="display-6 "><b>{{ book.title }}</b>
+<!--        {% for k in book.keyword.iterator %}-->
+<!--         <small><a href="{{ k.get_absolute_url }}" class="badge badge-secondary badge-sm">{{ k.name }}</a></small>-->
+<!--          {% endfor %}-->
+        </p>
+        <p class="text-muted small mb-1"><a href="{{ book.publisher.get_absolute_url }}">{{ book.publisher }}</a> ·
+          {{ book.author }}</p>
+        <!-- Product price-->
+
+
+
+        <div class="fs-5 mb-5">
+          {% if book.on_sale %}
+          <span class="text-primary">{{ book.sale }}% </span><span
+            class="text-muted text-decoration-line-through">{{ book.price }}원</span>
+          - {{ book.get_sale_price }}원
+          {% else %}
+          {{ book.get_sale_price }}원
+          {% endif %}
+        </div>
+        <!--                        <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>-->
+<!--        <div class="d-flex">-->
+<!--          <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"-->
+<!--            style="max-width: 3rem" />-->
+<!--          <button class="btn btn-outline-dark flex-shrink-0" type="button">-->
+<!--            <i class="bi-cart-fill me-1"></i>-->
+<!--            Add to cart-->
+<!--          </button>-->
+<!--        </div>-->
+      </div>
+    </div>
+    <!--여기에 상세 정보-->
+
+    <div class="container mt-5">
+      <p><b>이 상품이 속한 분야</b></p>
+      <div class="mt-0 pt-0 pl-4 mb-3 text-muted">{{ book.country }} > {{ book.genre }}</div>
+      <p><b>작품 소개</b></p>
+      <div class="p-4 card bg-light mb-3">{{ book.get_content_markdown | truncatewords_html:10000 | safe }}</div>
+      <br>
+      <p><b>저자 소개</b></p>
+
+      <div class="p-4 card bg-light mb-3" style="background-color:#f0ebebf6;">
+        <h6>저자(글) <b>{{ book.author.name }}</b></h6>
+        {{ book.author.author_info }}
+        <br>
+        <hr>
+
+        <p><b>작가의 다른 작품</b></p>
+        <div class="row">
+          {% for aob in author_other_books %}
+          <div class="col-2 ml-3">
+
+            {% if aob.head_image %}
+            <img src="{{ aob.head_image.url }}" class="card-img-top mt-2" alt="...">
+            {% else %}
+            <img src="https://dummyimage.com/450x450/dee2e6/6c757d.jpg" class="card-img-top mt-2" alt="...">
+            {% endif %}
+            <div class="p-0">
+              <h6 class="card-title mt-3 mb-0"><a href="{{ aob.get_absolute_url }}" class="text-dark"><small>{{ aob.title }}</small></a></h6>
+<!--              <small>{{ aob.get_sale_price }}원</small>-->
+<!--              {% if aob.on_sale %}-->
+<!--              <span class="text-primary small">{{ aob.sale }}% </span>-->
+<!--              {% endif %}-->
+                            {% if aob.on_sale %}
+              <span class="text-primary"><small>{{ aob.sale }}% </small></span><span
+                    class="text-muted text-decoration-line-through"><small>{{ aob.price }}원</small></span>
+              - <small>{{ aob.get_sale_price }}원</small>
+
+              {% else %}
+              <small>{{ aob.get_sale_price }}</small>원
+              {% endif %}
+
+
+
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+
+
+
+      </div>
+      <!--태그-->
+      <p><b>이 상품의 태그</b></p>
+
+      <p>
+        {% for k in book.keyword.iterator %}
+
+        <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#{{ k.name }}"
+          aria-expanded="false" aria-controls="collapseExample">
+          #{{ k }}
+        </button>
+        {% endfor %}
+      </p>
+
+      <!--                    -->
+
+      {% for k in book.keyword.iterator %}
+      <div class="row collapse" id="{{ k.name }}">
+
+        {% for kb in k.get_objects %}
+        <div class="col-2 ml-3">
+          <img src="{{ kb.head_image.url }}" class="card-img-top mt-2" alt="...">
+          <div class="p-0">
+            <h6 class="card-title mt-3 mb-0"> {{ kb.title }}</h6>
+            <small>{{ kb.get_sale_price }}원</small>
+            {% if kb.on_sale %}
+            <span class="text-primary small">{{ kb.sale }}% </span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% endfor %}
+        <p><button type="button" class="btn btn-right btn-sm float-right"><a href="{{ k.get_absolute_url }}">'{{ k.name }}' 관련 상품 더보러가기 > </a></button></p>
+
+
+      </div>
+
+      {% endfor %}
+
+      <hr>
+      <!--리뷰-->
+      <script>
+        function loadURL(url) {
+          window.open("/shop/", "pop", "width=500, height=400");
+        }
+      </script>
+
+
+
+      {% if user.is_authenticated %}
+      <p><b>리뷰 ( {{ book.comment_set.count }} )</b>
+        {% if user.is_authenticated %}
+        <span><a class="btn btn-secondary btn-sm float-right" data-toggle="collapse" href="#collapseExample"
+            role="button" aria-expanded="false" aria-controls="collapseExample">
+            리뷰 작성하기
+          </a></span>
+        {% endif %}
+      </p>
+      <p>
+
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <!-- Comment form-->
+          <form class="mb-4" id="comment-form" method="post" action="{{ book.get_absolute_url }}new_comment/">
+            {% csrf_token %}
+            <div class="form-group">
+              {{ comment_form | crispy }}
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+            <!--   button 실행하면, form action 실행 , -->
+
+          </form>
+        </div>
+      </div>
+
+      <br>
+      {% else %}
+      <p><b>리뷰 ( {{ book.comment_set.count }} )</b>
+        {% if user.is_authenticated %}
+        {% endif %}
+      </p>
+      <a role="button" class="btn btn-outline-secondary btn-sm btn-block" href="#" data-toggle="modal"
+        data-target="#loginModal">
+        <p class="text-muted">로그인 후, 리뷰 작성 가능</p>
+      </a>
+      </p>
+
+
+      {% endif %}
+
+
+      {% if book.comment_set.exists %}
+
+      {% for comment in book.comment_set.iterator %}
+      {% if comment.secret == 0 or comment.writer == user or book.post_writer == user %}
+      <div>
+        <p class="text-muted">
+          <img class="mr-2 rounded-circle" src="{{ comment.get_avatar_url }}" alt="{{ comment.writer }}" width="30px" />
+
+          <small><b>
+              {{ comment.writer.username }} |
+            {% if comment.created_at != comment.modified_at %}
+            수정:
+            {% endif %}
+            {{ comment.modified_at }}
+
+<!--              {% if user.is_authenticated %}-->
+<!--              <a>대댓글 달기</a>-->
+<!--              {% endif %}-->
+
+              {% if user.is_authenticated %}
+              <span><a style="height:23px; font-size:7px; font-color:gray;" class="btn btn-sm btn-light" data-toggle="collapse" href="#collapseExample{{ comment.pk }}" role="button"
+                  aria-expanded="false" aria-controls="collapseExample{{ comment.pk }}">
+                <b>대댓글 작성</b>
+                </a></span>
+              {% if user.is_authenticated and comment.writer == user %}
+              <a role="button" style="height:23px; font-size:7px; font-color:gray;" class="btn btn-sm btn-light"
+                id="comment-{{ comment.pk }}-update-btn" href="/shop/update_comment/{{ comment.pk }}/">
+                <b class="text-muted">수정</b>
+              </a>
+              <a role="button" style="height:23px; font-size:7px; font-color:red;" class="btn btn-sm btn-light"
+                data-toggle="modal" data-target="#deleteModal-{{ comment.pk }}" href="#">
+                <b class="text-muted">삭제</b>
+              </a>
+
+
+              <!--모달-->
+              <div class="modal fade" id="deleteModal-{{ comment.pk }}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel"><b>삭제하시겠습니까?</b></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <!-- 버튼 -->
+                    <div class="modal-body">
+                      <h6>
+                        {{ comment.writer }} - {{ comment.modified_at }}</h6>
+                      <p>{{ comment.content }}</p>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                      <a role="button" class="btn btn-secondary" href="/shop/delete_comment/{{ comment.pk }}/">
+                        삭제</a>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--                                       모달 끝-->
+
+
+
+              {% endif %}
+              {% endif %}
+
+              <div class="collapse m-0 p-0" id="collapseExample{{ comment.pk }}">
+                <div class="card card-body m-0 p-0">
+                  <!-- Comment form-->
+                  <form class="mb-4" id="commentOfComment-form" method="post"
+                    action="{{ book.get_absolute_url }}comment/{{ comment.pk }}/new_commentofcomment/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      {{ commentofComment_form | crispy }}
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                    <!--   button 실행하면, form action 실행 , -->
+
+                  </form>
+                </div>
+              </div>
+
+              <!--      <br>-->
+
+
+              <span class="float-right">
+                {% if comment.score == 1 %}
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                {% elif comment.score == 2 %}
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+
+                {% elif comment.score == 3 %}
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+                {% elif comment.score == 4 %}
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                {% else %}
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                <i class="fa-sharp fa-solid fa-star"></i>
+                {% endif %}
+              </span>
+            </b></small>
+
+        </p>
+
+        <p>{{ comment.content }}</p>
+        {% if comment.commentofcomment_set.exists %}
+        {% for coc in comment.commentofcomment_set.iterator  %}
+        <p class="ml-3">
+          <i class="fa-solid fa-arrow-right"></i>
+          <small>{{ coc.content }}</small>
+          <small class="text-muted">{{ coc.writer }} | {{ coc.modified_at }}</small>
+          {% if user.is_authenticated and coc.writer == user %}
+          <a role="button" href="/shop/update_coc/{{ coc.pk }}/">
+            <small class="text-muted">수정</small>
+          </a>
+          <a role="button" style="height:23px; font-size:7px; font-color:red;" class="btn btn-sm btn-light"
+            data-toggle="modal" data-target="#deleteModal-coc-{{ coc.pk }}" href="#">
+            <b class="text-muted">삭제</b>
+          </a>
+          <!--          대댓 삭제 모달-->
+          <div class="modal fade" id="deleteModal-coc-{{ coc.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel1"><b>삭제하시겠습니까?</b></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="modal-body">
+                  <h6>
+                    {{ coc.writer }} - {{ coc.modified_at }}</h6>
+                  <p>{{ coc.content }}</p>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                  <a role="button" class="btn btn-secondary" href="/shop/delete_coc/{{ coc.pk }}/">
+                    삭제</a>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--          대댓 삭제 모달 끝-->
+
+
+          {% endif %}
+        </p>
+        {% endfor %}
+
+        {% endif %}
+
+      </div>
+      <hr class="text-muted">
+      {% else %}
+
+
+      <p class="text-muted">
+          <img class="mr-2 rounded-circle" src="{{ comment.get_avatar_url }}" alt="{{ comment.writer }}" width="30px" />
+{{ comment.writer.username }} | {{ comment.modified_at }}
+      </p>
+      <p>비밀 댓글 입니다.</p>
+
+      <hr class="text-muted">
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+
+    </div>
+    <!--여기에 상세 정보 끝-->
+  </div>
+
+</section>
+
+
+
+{% endblock %}

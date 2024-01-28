@@ -1,0 +1,27 @@
+{% extends 'shop/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+    Register Author
+{% endblock %}
+
+{% block main_area %}
+
+<div class="container">
+
+    <h1>Register Author</h1>
+    <hr>
+    <form method="post" enctype="multipart/form-data" class="container">
+        {% csrf_token %}
+
+    {{ form | crispy }}
+        <button type="submit" class="btn btn-primary float_right">Submit</button>
+
+    </form>
+
+<br>
+
+{% endblock %}
+
+</div>

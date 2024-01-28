@@ -1,0 +1,38 @@
+{% extends 'shop/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+    Register Product
+{% endblock %}
+
+{% block main_area %}
+
+<div class="container w-75">
+
+    <h1>Register Product</h1>
+    <hr>
+    <form method="post" enctype="multipart/form-data" class="container">
+        <div class="card">
+            <div class="card-body">
+                * 덕성 문고에 등록 되어있지 않은 작가를 추가 하려면 작가 먼저 추가 해주세요.
+                <a href="/shop/create_author/">작가 추가</a>
+            </div>
+        </div>
+        {% csrf_token %}
+
+            {{ form | crispy }}
+          <div id="div_id_keywords_str">
+            <label for="id_tags">키워드:</label>
+            <input type="text" id="id_tags" name="keywords_str"
+            class="textinput textInput form-control">
+          </div>
+    <br>
+        <button type="submit" class="btn btn-primary float_right">Submit</button>
+
+    </form>
+{{ form.media }}
+<br>
+</div>
+{% endblock %}
+
